@@ -77,6 +77,12 @@ describe 'Acts As Taggable On' do
     end
   end
 
+  it 'should not override a user-defined columns method' do
+    expect(ColumnsOverrideModel.columns.map(&:name)).not_to include('ignored_column')
+    ColumnsOverrideModel.acts_as_taggable
+    expect(ColumnsOverrideModel.columns.map(&:name)).not_to include('ignored_column')
+  end
+
   describe 'with a custom delimiter' do
     before(:each) do
       @taggable = CachedModel.new(name: 'Bob Jones')
