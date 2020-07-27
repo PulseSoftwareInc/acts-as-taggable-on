@@ -25,11 +25,11 @@ module ActsAsTaggableOn::Taggable
             # the associations tag_taggings & tags are always returned in created order
             has_many context_taggings, -> { includes(:tag).order(taggings_order).where(context: tags_type) },
                      as: :taggable,
-                     class_name: ActsAsTaggableOn::Tagging,
+                     class_name: 'ActsAsTaggableOn::Tagging',
                      dependent: :destroy
 
             has_many context_tags, -> { order(taggings_order) },
-                     class_name: ActsAsTaggableOn::Tag,
+                     class_name: 'ActsAsTaggableOn::Tag',
                      through: context_taggings,
                      source: :tag
           end
@@ -267,7 +267,7 @@ module ActsAsTaggableOn::Taggable
     end
 
     def add_custom_context(value)
-      custom_contexts << value.to_s unless custom_contexts.include?(value.to_s) or self.class.tag_types.map(&:to_s).include?(value.to_s)
+      custom_contexts << value.to_s if !custom_contexts.include?(value.to_s) and self.class.tag_types.map(&:to_s).include?(value.to_s)
     end
 
     def cached_tag_list_on(context)
